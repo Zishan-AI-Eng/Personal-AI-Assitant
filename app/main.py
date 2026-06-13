@@ -1,10 +1,14 @@
 import json
 from fastapi import FastAPI
 from pydantic import BaseModel
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import SQLChaTMessageHistory
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 
 app=FastAPI(title="Personal Assistant Chatbot")
@@ -22,8 +26,8 @@ with open("profile_data.json") as f:
 
 
 
-llm=ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
+llm=ChatGroq(
+    model="llama3-70b-8192",
     temperature=0.1,    
 )
 

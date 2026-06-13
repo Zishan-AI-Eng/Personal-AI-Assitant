@@ -1,1 +1,13 @@
+# Environment variables (Never push your API keys!)
 .env
+
+# Local SQLite Database
+chat_memory.db
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environment (agar aapne folder banaya hai)
+venv/
+env/
