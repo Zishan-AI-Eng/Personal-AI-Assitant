@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_core.chat_message_histories import SQLChaTMessageHistory
+from langchain_community.chat_message_histories import SQLChaTMessageHistory
 
 
 app=FastAPI(title="Personal Assistant Chatbot")
@@ -61,3 +61,20 @@ def get_session_history(session_id: str):
     return SQLChaTMessageHistory(session_id,"sqlite://chat_memory.db")
 
 
+agent_with_memory=RunnableWithMessageHistory(
+    chain,
+    get_session_history,
+    input_messages_key="question",
+    history_messages_key="history"
+)
+
+
+@app.post("/chat")
+async def chat(request:ChatRequest):
+
+    response=agent_with_memory.invoke(
+        {"question":request.message},
+         config={"configurable ":  {"session_id": request.session_id}}
+    )
+
+    return {"response": response.content}
