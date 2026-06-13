@@ -1,0 +1,192 @@
+{
+  "personal_information": {
+    "name": "Zeeshan Khan[cite: 1]",
+    "titles": [
+      "AI Engineer[cite: 1]",
+      "Solution Architect[cite: 1]"
+    ],
+    "contact": {
+      "phone": "+92 314 0825236[cite: 1]",
+      "email": "zishan.ai.engineer@gmail.com[cite: 1]",
+      "linkedin": "zishan-ai-engineer[cite: 1]",
+      "github": "Zishan-Al-Eng[cite: 1]",
+      "portfolio_repository": "Zishan-Al-Eng-Portfolio[cite: 1]"
+    }
+  },
+  "profile_summary": "AI Engineer and Solution Architect with hands-on experience in designing and deploying production-grade, end-to-end AI systems.[cite: 1] Proficient in Deep Learning, Computer Vision, NLP, LLMs, RAG architectures, and Agentic AI automation using Python, PyTorch, TensorFlow, HuggingFace Transformers, LangGraph, and FastAPI.[cite: 1] Skilled in model fine-tuning, REST API integration, and building scalable cloud infrastructure for complex workflows.[cite: 1] Specialized in multilingual low-resource NLP including Urdu-English language models.[cite: 1] Currently pursuing a Bachelor's in Artificial Intelligence, driven to architect robust AI solutions for real-world problems.[cite: 1]",
+  "work_experience": [
+    {
+      "company": "DevelopersHub Corporation[cite: 1]",
+      "role": "Artificial Intelligence Intern[cite: 1]",
+      "duration": "Feb 2026 - Apr 2026[cite: 1]",
+      "location": "Remote[cite: 1]",
+      "responsibilities": [
+        "Working as a remote AI/ML Intern, focusing on developing and optimizing machine learning models for real-world applications.[cite: 1]",
+        "Applying knowledge of artificial intelligence to build data-driven solutions and contributing to innovative ML pipelines.[cite: 1]",
+        "Collaborating with cross-functional teams to research, prototype, and evaluate AI models.[cite: 1]"
+      ]
+    },
+    {
+      "company": "Code-O-Clock Technologies[cite: 1]",
+      "role": "AI Developer (Part-time)[cite: 1]",
+      "duration": "Nov 2025 - Mar 2026[cite: 1]",
+      "location": "Islamabad, Pakistan[cite: 1]",
+      "responsibilities": [
+        "Designing and integrating a custom AI chatbot into a core Flutter mobile application for end users.[cite: 1]",
+        "Collaborating with the mobile development team to bridge the gap between ML models and mobile interface, ensuring a smooth conversational experience.[cite: 1]",
+        "Deployed REST APIs to connect AI inference backend with Flutter frontend for real-time responses.[cite: 1]"
+      ]
+    },
+    {
+      "company": "QoreTeam Agency[cite: 1]",
+      "role": "Co-Founder & Lead AI Engineer[cite: 1]",
+      "duration": "Sep 2025 - Jan 2026[cite: 1]",
+      "location": "Remote[cite: 1]",
+      "responsibilities": [
+        "Spearheaded AI automation initiatives, onboarding 3+ enterprise clients within the first month and delivering custom NLP solutions.[cite: 1]",
+        "Deployed Agentic AI workflows that eliminated approx. 10 hours/week of manual data entry, increasing client efficiency by 25%.[cite: 1]",
+        "Built custom chatbots using NLP libraries to handle customer support queries autonomously, reducing response time by 40%.[cite: 1]",
+        "Managed end-to-end development from client requirement gathering to deployment on cloud infrastructure.[cite: 1]"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Autonomous GTM AI Engine[cite: 1]",
+      "technologies": [
+        "LangGraph[cite: 1]", 
+        "Celery[cite: 1]", 
+        "Redis[cite: 1]", 
+        "FastAPI[cite: 1]", 
+        "PostgreSQL[cite: 1]", 
+        "Playwright[cite: 1]"
+      ],
+      "description": [
+        "Engineered a distributed asynchronous Lead Discovery Pipeline utilizing concurrent.futures to scrape, validate, and deduplicate B2B leads across 7+ sources, bypassing WAFs via Playwright Stealth.[cite: 1]",
+        "Architected an event-driven automation bridge using Redis and Celery workers for background task queuing, ensuring 100% data retention and non-blocking API performance under heavy processing loads.[cite: 1]",
+        "Designed a multi-agent LangGraph state machine (Researcher, Strategist, Copywriter) integrated with local LLMs (Ollama, Llama-3.2, Qwen-2.5) for intelligent profiling and hyper-personalized cold email generation.[cite: 1]",
+        "Deployed a robust FastAPI backend with PostgreSQL (pgvector) to enforce state persistence, comprehensive audit logging, and a Human-in-the-Loop (HITL) gateway for strict quality control.[cite: 1]"
+      ]
+    },
+    {
+      "name": "Multimodal Agentic Sales AI[cite: 1]",
+      "technologies": [
+        "LangGraph[cite: 1]", 
+        "Python[cite: 1]", 
+        "GPT-4o[cite: 1]", 
+        "FastAPI[cite: 1]", 
+        "MongoDB[cite: 1]"
+      ],
+      "description": [
+        "Architected a strict 9-stage finite state machine using LangGraph to guarantee deterministic sales workflows and eliminate LLM hallucinations during negotiations.[cite: 1]",
+        "Integrated GPT-4o Vision and Whisper API to process multimodal inputs (documents, voice) and built a pure-Python pricing engine ensuring 100% calculation accuracy.[cite: 1]",
+        "Designed a hybrid memory architecture (Redis & MongoDB) for long-term context retention, preventing repetitive data collection from returning users.[cite: 1]",
+        "Deployed an asynchronous FastAPI backend featuring Stripe payment integration and automated data synchronization with a custom CRM.[cite: 1]"
+      ]
+    },
+    {
+      "name": "Multilingual Banking Chatbot[cite: 1]",
+      "technologies": [
+        "NLP[cite: 1]", 
+        "RAG[cite: 1]", 
+        "Pinecone[cite: 1]", 
+        "Urdu/English[cite: 1]"
+      ],
+      "description": [
+        "Architected a dual-language (English & Urdu) NLP model architecture tailored for the banking sector.[cite: 1]",
+        "Designed an intent-recognition and RAG (Retrieval-Augmented Generation) pipeline using Pinecone vector database to ground LLM responses in real-time financial context, effectively eliminating hallucinations.[cite: 1]",
+        "Trained on 8,000+ labeled Urdu/English banking queries across 20+ intent categories.[cite: 1]",
+        "Deployed via REST API enabling real-time inference for financial query resolution.[cite: 1]"
+      ]
+    },
+    {
+      "name": "Animal Species Detection AI[cite: 1]",
+      "technologies": [
+        "Python[cite: 1]", 
+        "CNN[cite: 1]", 
+        "Next.js[cite: 1]", 
+        "Vercel[cite: 1]"
+      ],
+      "description": [
+        "Engineered a CNN achieving 94% accuracy across 90+ distinct animal species using Transfer Learning.[cite: 1]",
+        "Reduced inference time to under 200ms by integrating the model with a high-performance Next.js frontend.[cite: 1]",
+        "Deployed the full-stack solution on Vercel and Hugging Face, serving real-time predictions to users.[cite: 1]"
+      ]
+    },
+    {
+      "name": "Zintel AI - AI SaaS Platform[cite: 1]",
+      "technologies": [
+        "Next.js[cite: 1]", 
+        "TypeScript[cite: 1]", 
+        "REST API[cite: 1]", 
+        "JavaScript[cite: 1]"
+      ],
+      "description": [
+        "Designed and deployed a full-stack AI SaaS platform offering AI Chatbot Development, Agentic AI Solutions, and AI-powered web applications for businesses.[cite: 1]",
+        "Built a dual-dashboard architecture a comprehensive Admin Panel for service management and analytics, and a User Dashboard for personalized AI solution access.[cite: 1]",
+        "Architected platform with REST API, Webhook, and SDK integrations enabling seamless embedding of AI capabilities into existing business workflows.[cite: 1]",
+        "Implemented end-to-end encrypted infrastructure with real-time processing and auto-scaling for high-performance AI service delivery.[cite: 1]"
+      ]
+    }
+  ],
+  "technical_skills": {
+    "artificial_intelligence": [
+      "RAG[cite: 1]", 
+      "Agentic Workflows[cite: 1]", 
+      "LLMs[cite: 1]", 
+      "NLP[cite: 1]", 
+      "ML[cite: 1]", 
+      "Prompt Engineering[cite: 1]", 
+      "Computer Vision[cite: 1]", 
+      "Deep Learning[cite: 1]", 
+      "Web Scraping[cite: 1]"
+    ],
+    "frameworks_apis_tools": [
+      "LangGraph[cite: 1]", 
+      "LangChain[cite: 1]", 
+      "PyTorch[cite: 1]", 
+      "TensorFlow[cite: 1]", 
+      "Hugging Face[cite: 1]", 
+      "OpenAI[cite: 1]", 
+      "MCP[cite: 1]", 
+      "Open Telemetry[cite: 1]"
+    ],
+    "languages_and_web": [
+      "Python[cite: 1]", 
+      "TypeScript[cite: 1]", 
+      "JavaScript[cite: 1]", 
+      "FastAPI[cite: 1]", 
+      "Next.js[cite: 1]", 
+      "React.js[cite: 1]", 
+      "Tailwind CSS[cite: 1]"
+    ],
+    "databases_cloud_integrations": [
+      "Redis[cite: 1]", 
+      "Pinecone[cite: 1]", 
+      "MongoDB[cite: 1]", 
+      "PostgreSQL[cite: 1]", 
+      "FAISS[cite: 1]", 
+      "REST APIs[cite: 1]", 
+      "Webhooks[cite: 1]", 
+      "Git[cite: 1]", 
+      "Vercel[cite: 1]", 
+      "Hugging Face[cite: 1]"
+    ]
+  },
+  "education": [
+    {
+      "institution": "Arid Agricultural University[cite: 1]",
+      "degree": "Bachelor's in Artificial Intelligence[cite: 1]",
+      "duration": "Feb 2024 - Expected Dec 2027[cite: 1]",
+      "location": "Rawalpindi, Pakistan[cite: 1]",
+      "registration_number": "2024-Arid-0216",
+      "current_semester": "6th semester"
+    },
+    {
+      "institution": "Bahria College Anchorage[cite: 1]",
+      "degree": "Intermediate in Computer Science[cite: 1]",
+      "duration": "Mar 2021 - Apr 2023[cite: 1]",
+      "location": "Islamabad, Pakistan[cite: 1]"
+    }
+  ]
+}
