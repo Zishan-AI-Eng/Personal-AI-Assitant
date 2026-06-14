@@ -104,19 +104,18 @@ agent_with_memory = RunnableWithMessageHistory(
 
 
 
-# ---Async Endpoint & Clean Error Handling ---
+# --- FastAPI ThreadPool & Clean Error Handling ---
 @app.post("/chat")
-async def chat(request: ChatRequest):
+def chat(request: ChatRequest):  # Removed 'async'
     try:
-        # Use ainvoke for non-blocking asynchronous execution
-        response = await agent_with_memory.ainvoke(
+        response = agent_with_memory.invoke(
             {"question": request.message},
             config={"configurable": {"session_id": request.session_id}}
         )
         return {"response": response.content}
         
     except Exception as e:
-        # Terminal mein asal error print hoga taake aap debug kar sakein
+        # Terminal mein asal error print hoga
         logger.error(f"Error processing chat for session {request.session_id}: {str(e)}", exc_info=True)
-        # Frontend/Client ko ek clean error message jayega (Security practice)
+        # Frontend ko clean message jayega
         raise HTTPException(status_code=500, detail="Internal server error. Please try again later.")
