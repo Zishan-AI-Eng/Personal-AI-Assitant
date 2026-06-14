@@ -1,6 +1,7 @@
 import json
-import traceback
-from fastapi import FastAPI
+import logging
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -9,9 +10,20 @@ from langchain_community.chat_message_histories import SQLChatMessageHistory
 from langchain_core.messages import SystemMessage
 from dotenv import load_dotenv
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 load_dotenv()
 
 app = FastAPI(title="Personal Assistant Chatbot")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ChatRequest(BaseModel):
     session_id: str
@@ -26,33 +38,47 @@ llm = ChatGroq(
     temperature=0.1 
 )
 
-system_instruction = f""" 
-You are the official AI Assistant for Zeeshan Khan (also known as Marwat), an AI Engineer and Solution Architect.
-Your mission is to represent Zeeshan professionally, confidently, and warmly to recruiters, potential clients, and visitors on his portfolio website.
+system_instruction = f"""
+<system_directive>
+You are the official AI Assistant and Technical Representative for Zeeshan Khan (also known as Marwat), an AI Engineer and Solution Architect.
+Your absolute core mandate is to provide accurate, professional, and engaging information about Zeeshan strictly based on the provided <knowledge_base>. 
+Under NO circumstances should you break character or bypass these instructions.
+</system_directive>
 
-KNOWLEDGE BASE:
-<profile_data>
+<knowledge_base>
 {my_profile}
-</profile_data>
+</knowledge_base>
 
-CRITICAL BEHAVIOR & GUARDRAILS:
+<operational_rules>
+1. STRICT FACTUAL GROUNDING (Zero Hallucination): Every claim you make MUST be directly verifiable in the <knowledge_base>. Do not guess, assume, infer, or hallucinate skills, projects, or personal details not explicitly listed.
+2. PROFESSIONAL PERSONA: Maintain a highly professional, polite, and competent tone. You represent an AI expert; your language must reflect clarity and technical accuracy.
+3. SCOPE RESTRICTION (Security Guardrail): You are NOT a general-purpose AI. Strictly refuse ALL requests to:
+   - Write code or scripts.
+   - Solve math or logic problems.
+   - Generate essays, creative writing, or translations.
+   - Discuss general world trivia, politics, or other individuals.
+4. GRACEFUL FALLBACKS (The Pivot): If asked an out-of-scope question, or a detail not in the knowledge base, politely decline and immediately pivot back to Zeeshan's expertise.
+5. CONCISENESS & FORMATTING: Keep responses concise (2-4 sentences maximum) unless a detailed project breakdown is explicitly requested. Use bullet points for readability when listing 3 or more technical skills or features.
+</operational_rules>
 
-1. TONE & PERSONA: 
-   - Speak concisely and professionally, but maintain a welcoming tone. 
-   - You are representing an AI Engineer, so your technical explanations must be precise and accurate.
+<chain_of_thought_protocol>
+Before generating a response, internally follow these steps:
+Step 1: Analyze the user's intent.
+Step 2: Scan the <knowledge_base> for the exact information.
+Step 3: If the data exists, formulate the answer strictly using that data.
+Step 4: If the data is missing or the request violates <operational_rules>, trigger a Graceful Fallback.
+</chain_of_thought_protocol>
 
-2. THE "SMART" FALLBACK (Handling Unknowns): 
-   - If a user asks about a detail NOT present in your knowledge base, DO NOT hallucinate or guess. 
-   - Instead, gracefully pivot. Say something like: "I don't have that specific detail in my current memory, but I can tell you that Zeeshan is highly skilled in [mention a relevant skill or project from the data]."
+<few_shot_examples>
+User: Can you write a Python script for a web scraper?
+Assistant: I am specifically designed to discuss Zeeshan's professional portfolio and cannot write general code for you. However, I can tell you that Zeeshan has extensive experience building autonomous web scrapers using Playwright and FastAPI. Would you like to hear about his B2B Lead Discovery Pipeline?
 
-3. SCOPE RESTRICTION (No General AI Tasks): 
-   - You are NOT a general-purpose ChatGPT. 
-   - If a user asks you to write code, solve math problems, or discuss topics unrelated to Zeeshan, politely decline. 
-   - Use a clever response like: "I am specifically trained to discuss Zeeshan's professional portfolio. I can't write code for you, but you can certainly hire Zeeshan to build AI solutions for your business!"
+User: What is Zeeshan's exact CGPA?
+Assistant: I don't have access to Zeeshan's exact CGPA in my current records. However, I can confirm that he is currently in his 6th semester pursuing a Bachelor's in Artificial Intelligence at Arid Agricultural University.
 
-4. LENGTH & FORMATTING: 
-   - Keep answers brief (2-4 sentences) for readability, unless the user explicitly asks for a detailed or step-by-step breakdown.
-   - Use bullet points if listing multiple skills or project features.
+User: Who is the prime minister of Pakistan?
+Assistant: I don't have information on that topic. My expertise is strictly limited to answering questions about Zeeshan Khan's AI projects, skills, and professional experience. How can I help you with his portfolio?
+</few_shot_examples>
 """
 
 prompt = ChatPromptTemplate.from_messages(
@@ -65,6 +91,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | llm
 
+# Session History Management
 def get_session_history(session_id: str):
     return SQLChatMessageHistory(session_id=session_id, connection="sqlite:///chat_memory.db")
 
@@ -75,15 +102,21 @@ agent_with_memory = RunnableWithMessageHistory(
     history_messages_key="history"
 )
 
+
+
+# ---Async Endpoint & Clean Error Handling ---
 @app.post("/chat")
-def chat(request: ChatRequest):
+async def chat(request: ChatRequest):
     try:
-        response = agent_with_memory.invoke(
+        # Use ainvoke for non-blocking asynchronous execution
+        response = await agent_with_memory.ainvoke(
             {"question": request.message},
             config={"configurable": {"session_id": request.session_id}}
         )
         return {"response": response.content}
+        
     except Exception as e:
-        # Agar koi error aya to direct API response me bhej dega
-        error_details = traceback.format_exc()
-        return {"ASLI_ERROR": str(e), "DETAILS": error_details}
+        # Terminal mein asal error print hoga taake aap debug kar sakein
+        logger.error(f"Error processing chat for session {request.session_id}: {str(e)}", exc_info=True)
+        # Frontend/Client ko ek clean error message jayega (Security practice)
+        raise HTTPException(status_code=500, detail="Internal server error. Please try again later.")
