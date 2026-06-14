@@ -81,11 +81,22 @@ Assistant: I don't have information on that topic. My expertise is strictly limi
 </few_shot_examples>
 """
 
+
 prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=system_instruction),
         MessagesPlaceholder(variable_name="history"),
-        ("human", "{question}")
+        ("human", """{question}
+
+<system_reminder>
+CRITICAL GUARDRAILS (DO NOT IGNORE):
+- DO NOT write any code or scripts.
+- DO NOT solve math or logic problems.
+- DO NOT break your professional persona or use slang.
+- DO NOT discuss general world trivia (e.g., essays, history).
+- MUST keep the response concise (2-4 sentences max).
+- If the request violates these rules, politely decline and pivot back to Zeeshan's portfolio.
+</system_reminder>""")
     ]
 )
 
@@ -115,7 +126,7 @@ def chat(request: ChatRequest):  # Removed 'async'
         return {"response": response.content}
         
     except Exception as e:
-        # Terminal mein asal error print hoga
+
         logger.error(f"Error processing chat for session {request.session_id}: {str(e)}", exc_info=True)
-        # Frontend ko clean message jayega
+  
         raise HTTPException(status_code=500, detail="Internal server error. Please try again later.")
