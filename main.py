@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from agents.router_agent import route_query
-from agents.portfolio_agent import process_protfolio
+from agents.portfolio_agent import process_portfolio
 from core.state import get_session_history
 from agents.reject_agent import process_reject
 
@@ -21,14 +21,15 @@ app=FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
 )
 
 class ChatRequest(BaseModel):
-    user_query:str
-    chat_history:list
+    session_id: str
+    user_query: str
+    chat_history: list = []
 
 
 
@@ -39,19 +40,17 @@ def chat_endpoint(request:ChatRequest):
         logger.info(f"Session:{request.session_id} routed to: {route}")
 
         if route=="Portfolio":
-             
             history_instance=get_session_history(request.session_id)
             chat_history=history_instance.get_messages()
 
-            response_content=process_protfolio(request.message,chat_history)
+            response_content=process_portfolio(request.user_query,chat_history)
 
-            history_instance.add_user_message(request.message)
-            
+            history_instance.add_user_message(request.user_query)
             history_instance.add_ai_message(response_content)
         
 
         else:
-            response_content=process_reject(request.message)
+            response_content=process_reject(request.user_query)
 
         return {"response":response_content}
     
