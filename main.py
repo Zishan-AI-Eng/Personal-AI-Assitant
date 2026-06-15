@@ -1,7 +1,7 @@
 import logging
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from typing import Optional
 
 from agents.router_agent import route_query
@@ -29,34 +29,36 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     session_id: str
-    user_query: str
-    chat_history: Optional[list] = []
+    user_query: str = Field(..., min_length=1) 
+    chat_history: Optional[list] = [] 
 
 
 
 @app.post("/chat")
-def chat_endpoint(request:ChatRequest):
+async def chat_endpoint(request: ChatRequest):
     try:
-        logger.info(f"Incoming request: {request}")
+        logger.info(f"Session {request.session_id} received query: {request.user_query}")
 
-        route=route_query(request.user_query)
-        logger.info(f"Session:{request.session_id} routed to: {route}")
+        # 2. Routing logic
+        route = route_query(request.user_query)
+        
+        if route == "Portfolio":
+            history_instance = get_session_history(request.session_id)
+           
+            chat_history = history_instance.get_messages() 
 
-        if route=="Portfolio":
-            history_instance=get_session_history(request.session_id)
-            chat_history=history_instance.get_messages()
+            response_content = process_portfolio(request.user_query, chat_history)
 
-            response_content=process_portfolio(request.user_query,chat_history)
-
+           
             history_instance.add_user_message(request.user_query)
             history_instance.add_ai_message(response_content)
-        
-
+            
         else:
-            response_content=process_reject(request.user_query)
+            response_content = process_reject(request.user_query)
 
-        return {"response":response_content}
+        return {"response": response_content}
     
     except Exception as e:
-        logger.error(f"Error in chat endpoint for session {request.session_id}: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Internal server error. Please try again later.")
+        logger.error(f"Critical error in session {request.session_id}: {str(e)}", exc_info=True)
+        
+        raise HTTPException(status_code=500, detail=f"AI Engine Error: {str(e)}")
