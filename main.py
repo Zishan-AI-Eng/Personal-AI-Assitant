@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 class ChatRequest(BaseModel):
-    session_id: str
+    session_id: Optional[str] = "default-session"
     user_query: str = Field(..., min_length=1) 
     chat_history: Optional[list] = [] 
 
