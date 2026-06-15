@@ -24,9 +24,9 @@ def process_portfolio(user_query:str, chat_history:list) ->str:
     """
 
     prompt=ChatPromptTemplate.from_messages(
-        ['system',system_instruction,
+        [('system',system_instruction),
          MessagesPlaceholder(variable_name='history'),
-         'human',{user_query}
+         ('human',{user_query})
          ]
     )
 
