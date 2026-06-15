@@ -2,6 +2,7 @@ import logging
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 
 from agents.router_agent import route_query
 from agents.portfolio_agent import process_portfolio
@@ -29,13 +30,15 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     session_id: str
     user_query: str
-    chat_history: list = []
+    chat_history: Optional[list] = []
 
 
 
 @app.post("/chat")
 def chat_endpoint(request:ChatRequest):
     try:
+        logger.info(f"Incoming request: {request}")
+
         route=route_query(request.user_query)
         logger.info(f"Session:{request.session_id} routed to: {route}")
 
