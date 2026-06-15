@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+
+# --- LangChain Ecosystem ---
+langchain
+langchain-core
+langchain-community
+langgraph
+langchain-groq
+
+# --- Database / History ---
+SQLAlchemy
+psycopg2-binary
