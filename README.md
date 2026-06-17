@@ -7,8 +7,6 @@ sdk: docker
 pinned: false
 ---
 
-
-
 <div align="center">
 
 # 🤖 AI Portfolio Assistant
@@ -31,12 +29,13 @@ An enterprise-grade, autonomous AI assistant for handling professional portfolio
 
 ## 📖 Overview
 
-This project replaces a static portfolio FAQ with an intelligent conversational layer. A **supervisor (Router) agent** classifies every incoming query and dispatches it to the appropriate specialist agent — either a context-grounded portfolio responder or a zero-cost security guardrail — while a managed Postgres database preserves full conversation history across sessions.
+This project replaces a static portfolio FAQ with an intelligent conversational layer. A **supervisor (Router) agent** classifies every incoming query and dispatches it to the appropriate specialist agent — either a context-grounded portfolio responder, a polite greeting handler, or a zero-cost security guardrail. A managed Postgres database preserves full conversation history across sessions.
 
 ## ✨ Key Features
 
-- **Multi-Agent Semantic Routing** — A supervisor agent (Router) classifies user intent and routes queries to specialized worker agents.
-- **Zero-Hallucination Guardrails** — A dedicated `Reject Agent` blocks prompt injections, code requests, and out-of-scope queries with zero LLM inference cost.
+- **Multi-Agent Semantic Routing** — A supervisor agent (Router) classifies user intent into three distinct routes (Portfolio, Greeting, Reject) and dispatches to specialized worker agents.
+- **Context-Aware Guardrails (Zero Latency)** — A dedicated `Reject Agent` uses Regex patterns to block prompt injections, code requests, and out-of-scope queries with zero LLM inference cost, while maintaining a dynamic, non-repetitive UX.
+- **Smart Small Talk Handling** — A dedicated `Greeting Agent` gracefully handles casual conversations, Roman Urdu/Hindi greetings, and bot-identity questions, smoothly steering users back to the professional portfolio.
 - **Stateful Conversation Memory** — Chat history is managed via a cloud-hosted PostgreSQL database (Supabase), keeping context intact across sessions.
 - **Ultra-Fast Inference** — Powered by Meta's `Llama-3.3-70B-Versatile` via the Groq API for rapid, intelligent query resolution.
 
@@ -45,14 +44,16 @@ This project replaces a static portfolio FAQ with an intelligent conversational 
 ```mermaid
 flowchart LR
     U([User Query]) --> R{Router Agent}
-    R -->|Portfolio-related| P[Portfolio Agent]
+    R -->|Portfolio & Professional| P[Portfolio Agent]
+    R -->|Small Talk & Identity| G[Greeting Agent]
     R -->|Out-of-scope / Injection| X[Reject Agent]
+    
     P --> O([Response])
+    G --> O
     X --> O
+    
     P -. reads/writes .-> DB[(Supabase · Session Memory)]
-```
-
-The Router Agent acts as a lightweight supervisor: it determines whether a query is genuinely about the portfolio (skills, experience, projects) or falls outside scope. In-scope queries are passed to the **Portfolio Agent**, which generates a context-grounded response and persists the exchange to Supabase. Anything else — prompt injections, code requests, irrelevant chatter — is intercepted by the **Reject Agent** before it ever reaches the LLM.
+    G -. reads/writes .-> DB
 
 ## 🧰 Tech Stack
 
@@ -71,7 +72,8 @@ The Router Agent acts as a lightweight supervisor: it determines whether a query
 ├── agents/
 │   ├── router_agent.py      # Semantic intent classifier (Supervisor)
 │   ├── portfolio_agent.py   # RAG/context-driven response worker
-│   └── reject_agent.py      # Zero-latency security guardrail
+│   ├── greeting_agent.py    # Casual conversation & steering worker
+│   └── reject_agent.py      # Regex-powered, zero-latency guardrail
 ├── core/
 │   ├── config.py            # Centralized environment & LLM configuration
 │   └── state.py             # PostgreSQL session history manager
@@ -79,7 +81,7 @@ The Router Agent acts as a lightweight supervisor: it determines whether a query
 │   └── profile_data.json    # Knowledge base: skills, experience, projects
 ├── main.py                  # FastAPI entry point & API routes
 ├── requirements.txt         # Project dependencies
-└── .env                      # Environment variables (ignored in Git)
+└── .env                     # Environment variables (ignored in Git)
 ```
 
 ## 🚀 Getting Started
