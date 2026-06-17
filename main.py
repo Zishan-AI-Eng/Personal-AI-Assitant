@@ -3,6 +3,8 @@ from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel,Field
 from typing import Optional
+from agents.greeting_agent import process_greeting
+
 
 from agents.router_agent import route_query
 from agents.portfolio_agent import process_portfolio
@@ -52,6 +54,14 @@ async def chat_endpoint(request: ChatRequest):
            
             history_instance.add_user_message(request.user_query)
             history_instance.add_ai_message(response_content)
+
+        elif route == "Greeting":
+            response_content = process_greeting(request.user_query)
+
+            history_instance = get_session_history(request.session_id)
+            history_instance.add_user_message(request.user_query)
+            history_instance.add_ai_message(response_content)
+
             
         else:
             response_content = process_reject(request.user_query)

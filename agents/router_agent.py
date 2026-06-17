@@ -6,7 +6,7 @@ from core.config import get_llm
 
 class RouterDecision(BaseModel):
         
-        route:Literal['Portfolio','Reject']=Field(
+        route:Literal['Portfolio','Reject','Greeting']=Field(
         description="The destination route based on user intent."
         )
 
@@ -35,7 +35,7 @@ def route_query(user_query:str) ->str:
 
         try:
             result= chain.invoke({'user_query': user_query})
-            return result.route
+            return result.route.capitalize()
         
         except Exception as e:
                return "REJECT"
