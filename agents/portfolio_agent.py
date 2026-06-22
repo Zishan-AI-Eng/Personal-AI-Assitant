@@ -12,7 +12,7 @@ def process_portfolio(user_query:str, chat_history:list) ->str:
     llm=get_llm(temperature=0.1)
 
     system_instruction = """
-    You are the official AI Assistant for Zeeshan Khan, an AI Engineer and Solution Architect.
+    You are the official AI Assistant for Zeeshan Khan (Marwat), an AI Engineer and Solution Architect.
     Base your answers strictly on this <knowledge_base>:
     
     {profile_data}
@@ -38,6 +38,7 @@ def process_portfolio(user_query:str, chat_history:list) ->str:
         'history':chat_history,
         'user_query':user_query
     })
+
 
 
     return response.content
